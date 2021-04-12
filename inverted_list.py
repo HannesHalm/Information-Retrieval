@@ -17,7 +17,7 @@ class InvertedIndex:
             for line in file:
                 record_id += 1
                 self.number_of_films += 1
-                words = re.split("[^a-zA-Z']+", line)       # Tokenize
+                words = re.split("[^a-zA-Z'\n]+", line)       # Tokenize
 
                 for word in words:
                     self.number_of_words += 1
@@ -54,8 +54,10 @@ class InvertedIndex:
             frequency_words.append((inverted_list[1], word))
 
 
-        frequency_words.sort(reverse=1)
-        print(frequency_words)
+        frequency_words.sort()
+        for list in frequency_words:
+            print(list[0], list[1])
+
         frequency.sort(reverse=1)
         plt.plot(frequency)
         plt.show()
@@ -68,9 +70,13 @@ class InvertedIndex:
             frequency.append(len(inverted_list[0]))
             frequency_words.append((word, len(inverted_list[0])))
 
-        frequency_words.sort(key=take_second, reverse=1)
+        frequency_words.sort(key=take_second)
         frequency.sort(reverse=1)
-        print(frequency_words)
+
+
+        for list in frequency_words:
+            print(list[0], list [1])
+
 
 
 def take_second(element):
@@ -79,7 +85,7 @@ def take_second(element):
 
 def main():
     movies = InvertedIndex()
-    movies.read_from_file('movies_reduced.txt')
+    movies.read_from_file('movies.txt')
 
     print("Number of films: ", movies.number_of_films)
     print("Number of words: ", movies.number_of_words)
@@ -88,7 +94,7 @@ def main():
 
     keywords = ["japanese", "animated"]
     print(movies.inverted_lists["a"])
-    movies.search_keyword(keywords)
+    #movies.search_keyword(keywords)
     movies.plot_frequency()
     movies.word_occurrence()
 
