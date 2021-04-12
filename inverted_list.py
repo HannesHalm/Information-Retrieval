@@ -23,13 +23,17 @@ class InvertedIndex:
                     self.number_of_words += 1
                     word = word.lower()
                     if word not in self.inverted_lists:
-                        self.inverted_lists[word] = ([], 0)
-                        #self.inverted_lists[word] = ([], 0)
+                        self.inverted_lists[word] = [[], 0]
+
+                    self.inverted_lists[word][1] += 1
 
                     # Automatically sorted since for-loop
                     self.inverted_lists[word][0].append(record_id)
 
+        for word, index_list in self.inverted_lists.items():
+            index_list[0] = list(dict.fromkeys(index_list[0]))
 
+    # Task 2
     def search_keyword(self, keywords):
         look = []
         for word in keywords:
@@ -41,21 +45,32 @@ class InvertedIndex:
         result = set(self.inverted_lists[keywords[0]][0]).intersection(*look)
         print(result)
 
-
+    # Task 3
     def plot_frequency(self):
+        frequency = []
+        frequency_words = []
+        for word, inverted_list in sorted(self.inverted_lists.items()):
+            frequency.append(inverted_list[1])
+            frequency_words.append((inverted_list[1], word))
+
+
+        frequency_words.sort(reverse=1)
+        print(frequency_words)
+        frequency.sort(reverse=1)
+        plt.plot(frequency)
+        plt.show()
+
+    # Task 4
+    def word_occurrence(self):
         frequency = []
         frequency_words = []
         for word, inverted_list in sorted(self.inverted_lists.items()):
             frequency.append(len(inverted_list[0]))
             frequency_words.append((word, len(inverted_list[0])))
 
-        frequency_words.sort(key=take_second)
+        frequency_words.sort(key=take_second, reverse=1)
         frequency.sort(reverse=1)
-        for word in frequency_words:
-            print(word)
-
-        plt.plot(frequency)
-        plt.show()
+        print(frequency_words)
 
 
 def take_second(element):
@@ -64,7 +79,7 @@ def take_second(element):
 
 def main():
     movies = InvertedIndex()
-    movies.read_from_file('movies.txt')
+    movies.read_from_file('movies_reduced.txt')
 
     print("Number of films: ", movies.number_of_films)
     print("Number of words: ", movies.number_of_words)
@@ -72,10 +87,11 @@ def main():
 
 
     keywords = ["japanese", "animated"]
-
+    print(movies.inverted_lists["a"])
     movies.search_keyword(keywords)
     movies.plot_frequency()
-    #print(movies.inverted_lists[])
+    movies.word_occurrence()
+
 
 
 if __name__ == "__main__":
