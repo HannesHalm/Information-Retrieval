@@ -17,7 +17,7 @@ class InvertedIndex:
             for line in file:
                 record_id += 1
                 self.number_of_films += 1
-                words = re.split("[^a-zA-Z'\n]+", line)       # Tokenize
+                words = re.split("[^a-zA-Z']+", line)       # Tokenize
 
                 for word in words:
                     self.number_of_words += 1
@@ -53,13 +53,27 @@ class InvertedIndex:
             frequency.append(inverted_list[1])
             frequency_words.append((inverted_list[1], word))
 
-
         frequency_words.sort()
-        for list in frequency_words:
-            print(list[0], list[1])
 
         frequency.sort(reverse=1)
-        plt.plot(frequency)
+        x_axis = np.array(np.linspace(1, len(frequency_words), len(frequency_words)))
+        y_axis = np.array(frequency)
+
+        # log both scales
+        x_axis = np.log10(x_axis)
+        y_axis = np.log10(y_axis)
+
+        # calculate alpha using regression
+        m, b = np.polyfit(x_axis, y_axis, 1)
+        print("alpha", -m)
+
+        # plot
+        fig, (ax1, ax2) = plt.subplots(1, 2)
+        plt.xlabel("n th word")
+        plt.ylabel("word frequency")
+        ax1.plot(frequency)
+        ax2.plot(x_axis, y_axis)
+
         plt.show()
 
     # Task 4
@@ -91,12 +105,11 @@ def main():
     print("Number of words: ", movies.number_of_words)
     #print("Amount of unique words ", len(movies.inverted_lists))
 
-
     keywords = ["japanese", "animated"]
-    print(movies.inverted_lists["a"])
+
     #movies.search_keyword(keywords)
     movies.plot_frequency()
-    movies.word_occurrence()
+    #movies.word_occurrence()
 
 
 
