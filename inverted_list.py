@@ -3,6 +3,8 @@ __author__ = "Hannes Halm"
 import re
 import matplotlib.pyplot as plt
 import numpy as np
+import cProfile
+
 
 class InvertedIndex:
 
@@ -114,4 +116,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    cProfile.run('main()')
