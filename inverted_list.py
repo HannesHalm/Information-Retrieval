@@ -3,8 +3,7 @@ __author__ = "Hannes Halm"
 import re
 import matplotlib.pyplot as plt
 import numpy as np
-import cProfile
-
+from profilehooks import profile
 
 class InvertedIndex:
 
@@ -13,6 +12,7 @@ class InvertedIndex:
         self.number_of_films = 0
         self.number_of_words = 0
 
+    @profile
     def read_from_file(self, file_name):
         record_id = 0
         with open(file_name, encoding='utf-8') as file:
@@ -36,6 +36,7 @@ class InvertedIndex:
             index_list[0] = list(dict.fromkeys(index_list[0]))
 
     # Task 2
+    @profile
     def search_keyword(self, keywords):
         look = []
         for word in keywords:
@@ -109,11 +110,11 @@ def main():
 
     keywords = ["japanese", "animated"]
 
-    #movies.search_keyword(keywords)
-    movies.plot_frequency()
+    movies.search_keyword(keywords)
+    #movies.plot_frequency()
     #movies.word_occurrence()
 
 
 
 if __name__ == "__main__":
-    cProfile.run('main()')
+    main()
