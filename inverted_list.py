@@ -25,7 +25,8 @@ class InvertedIndex:
                     self.number_of_words += 1
                     word = word.lower()
                     if word not in self.inverted_lists:
-                        self.inverted_lists[word] = [[], 0]
+                        # Dict with word as key and values in order being IDs, frequency, score
+                        self.inverted_lists[word] = [[], 0, 1]
 
                     self.inverted_lists[word][1] += 1
 
@@ -35,9 +36,33 @@ class InvertedIndex:
         for word, index_list in self.inverted_lists.items():
             index_list[0] = list(dict.fromkeys(index_list[0]))
 
+    # Third position in inverted index
+    def get_score(self, index_list):
+        return indexlist[2]
+
+
     # Task 2
     @profile
     def search_keyword(self, keywords):
+        list1 = self.inverted_lists['japanese'][0]
+        list2 = self.inverted_lists['animated'][0]
+        i1, i2 = 0
+        n1 = len(self.inverted_lists['japanese'][0])
+        n2 = len(self.inverted_lists['animated'][0])
+        result = []
+        while(true):
+            if i1 < n1 and list1[i1] < list2[i2]:
+                i1 += 1
+            if i1 == n1: break
+            if i2 < n2 and list2[i2] < list1[i1]:
+                i2 += 1
+            if i2 == n2: break
+            if list1[i1] == list2[i2]:
+                result.append()
+
+
+
+        '''
         look = []
         for word in keywords:
             try:
@@ -47,7 +72,7 @@ class InvertedIndex:
 
         result = set(self.inverted_lists[keywords[0]][0]).intersection(*look)
         print(result)
-
+        '''
     # Task 3
     def plot_frequency(self):
         frequency = []
