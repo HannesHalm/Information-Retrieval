@@ -12,7 +12,7 @@ class InvertedIndex:
         self.number_of_films = 0
         self.number_of_words = 0
 
-    @profile
+    #@profile
     def read_from_file(self, file_name):
         record_id = 0
         with open(file_name, encoding='utf-8') as file:
@@ -36,43 +36,43 @@ class InvertedIndex:
         for word, index_list in self.inverted_lists.items():
             index_list[0] = list(dict.fromkeys(index_list[0]))
 
-    # Third position in inverted index
-    def get_score(self, index_list):
-        return indexlist[2]
-
-
     # Task 2
-    @profile
-    def search_keyword(self, keywords):
-        list1 = self.inverted_lists['japanese'][0]
-        list2 = self.inverted_lists['animated'][0]
-        i1, i2 = 0
-        n1 = len(self.inverted_lists['japanese'][0])
-        n2 = len(self.inverted_lists['animated'][0])
+    def and_query(self, keywords):
         result = []
-        while(true):
-            if i1 < n1 and list1[i1] < list2[i2]:
+        word_list = self.inverted_lists[keywords.pop(0)][0]
+
+        for word in word_list:
+            result.append([word, 0])
+
+        for word in keywords:
+            result = self.search_keyword(result, self.inverted_lists[word][0])
+
+        print(result)
+
+    #@profile
+    def search_keyword(self, list1, list2):
+        result = []
+        i1 = 0
+        i2 = 0
+
+        n1 = len(list1)
+        n2 = len(list2)
+        while 1:
+            if i1 < n1 and list1[i1][0] < list2[i2]:
                 i1 += 1
             if i1 == n1: break
-            if i2 < n2 and list2[i2] < list1[i1]:
+            if i2 < n2 and list2[i2] < list1[i1][0]:
                 i2 += 1
             if i2 == n2: break
-            if list1[i1] == list2[i2]:
-                result.append()
+            if list1[i1][0] == list2[i2]:
+                result.append([list1[i1][0], list1[i1][1] + 1])
 
+                i1 += 1
+                i2 += 1
+                if i1 == n1 or i2 == n2: break
 
+        return result
 
-        '''
-        look = []
-        for word in keywords:
-            try:
-                look.append(set(self.inverted_lists[word][0]))
-            except:
-                print(word, " was not found in any document")
-
-        result = set(self.inverted_lists[keywords[0]][0]).intersection(*look)
-        print(result)
-        '''
     # Task 3
     def plot_frequency(self):
         frequency = []
@@ -120,6 +120,46 @@ class InvertedIndex:
             print(list[0], list [1])
 
 
+    def or_query(self, keywords):
+        result = []
+        word_list = self.inverted_lists[keywords.pop(0)][0]
+
+        for word in word_list:
+            result.append([word, 0])
+
+        for word in keywords:
+            result = self.search(result, self.inverted_lists[word][0])
+
+        print("or ",result)
+
+    #@profile
+    def search(self, list1, list2):
+        result = []
+        i1 = 0
+        i2 = 0
+
+        n1 = len(list1)
+        n2 = len(list2)
+        while 1:
+            if i1 < n1 and list1[i1][0] < list2[i2]:
+                result.append([list1[i1][0], list1[i1][1]])
+                i1 += 1
+            if i1 == n1: break
+            if i2 < n2 and list2[i2] < list1[i1][0]:
+                result.append([list1[i1], list1[i1][1]])
+                i2 += 1
+            if i2 == n2: break
+
+            if list1[i1][0] == list2[i2]:
+
+                result.append([list1[i1][0], list1[i1][1] + 1])
+                i1 += 1
+                i2 += 1
+                if i1 == n1 or i2 == n2: break
+
+        return result
+
+
 
 def take_second(element):
     return element[1]
@@ -127,15 +167,16 @@ def take_second(element):
 
 def main():
     movies = InvertedIndex()
-    movies.read_from_file('movies.txt')
+    movies.read_from_file('movies_reduced.txt')
 
     print("Number of films: ", movies.number_of_films)
     print("Number of words: ", movies.number_of_words)
     #print("Amount of unique words ", len(movies.inverted_lists))
 
-    keywords = ["japanese", "animated"]
+    keywords = ["is", "a"]
 
-    movies.search_keyword(keywords)
+    movies.and_query(keywords)
+    movies.or_query(keywords)
     #movies.plot_frequency()
     #movies.word_occurrence()
 
