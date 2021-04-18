@@ -125,15 +125,15 @@ class InvertedIndex:
         word_list = self.inverted_lists[keywords.pop(0)][0]
 
         for word in word_list:
-            result.append([word, 0])
+            result.append([word, 1])
 
         for word in keywords:
-            result = self.search(result, self.inverted_lists[word][0])
+            result = self.or_search(result, self.inverted_lists[word][0])
 
         print("or ",result)
 
     #@profile
-    def search(self, list1, list2):
+    def or_search(self, list1, list2):
         result = []
         i1 = 0
         i2 = 0
@@ -146,12 +146,11 @@ class InvertedIndex:
                 i1 += 1
             if i1 == n1: break
             if i2 < n2 and list2[i2] < list1[i1][0]:
-                result.append([list1[i1], list1[i1][1]])
+                result.append([list2[i2], 1])
                 i2 += 1
             if i2 == n2: break
 
             if list1[i1][0] == list2[i2]:
-
                 result.append([list1[i1][0], list1[i1][1] + 1])
                 i1 += 1
                 i2 += 1
@@ -173,7 +172,7 @@ def main():
     print("Number of words: ", movies.number_of_words)
     #print("Amount of unique words ", len(movies.inverted_lists))
 
-    keywords = ["is", "a"]
+    keywords = ["comedy", "japanese", "and", "the"]
 
     movies.and_query(keywords)
     movies.or_query(keywords)
