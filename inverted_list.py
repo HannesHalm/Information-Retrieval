@@ -47,7 +47,8 @@ class InvertedIndex:
         for word in keywords:
             result = self.search_keyword(result, self.inverted_lists[word][0])
 
-        print(result)
+        print("and", result)
+        print("and len", len(result))
 
     #@profile
     def search_keyword(self, list1, list2):
@@ -58,10 +59,10 @@ class InvertedIndex:
         n1 = len(list1)
         n2 = len(list2)
         while 1:
-            if i1 < n1 and list1[i1][0] < list2[i2]:
+            while i1 < n1 and list1[i1][0] < list2[i2]:
                 i1 += 1
             if i1 == n1: break
-            if i2 < n2 and list2[i2] < list1[i1][0]:
+            while i2 < n2 and list2[i2] < list1[i1][0]:
                 i2 += 1
             if i2 == n2: break
             if list1[i1][0] == list2[i2]:
@@ -119,7 +120,6 @@ class InvertedIndex:
         for list in frequency_words:
             print(list[0], list [1])
 
-
     def or_query(self, keywords):
         result = []
         word_list = self.inverted_lists[keywords.pop(0)][0]
@@ -130,9 +130,9 @@ class InvertedIndex:
         for word in keywords:
             result = self.or_search(result, self.inverted_lists[word][0])
 
-        print("or ",result)
+        print("or ", sorted(result, key = lambda x: x[1], reverse=1))
 
-    #@profile
+    @profile
     def or_search(self, list1, list2):
         result = []
         i1 = 0
@@ -141,11 +141,11 @@ class InvertedIndex:
         n1 = len(list1)
         n2 = len(list2)
         while 1:
-            if i1 < n1 and list1[i1][0] < list2[i2]:
+            while i1 < n1 and list1[i1][0] < list2[i2]:
                 result.append([list1[i1][0], list1[i1][1]])
                 i1 += 1
             if i1 == n1: break
-            if i2 < n2 and list2[i2] < list1[i1][0]:
+            while i2 < n2 and list2[i2] < list1[i1][0]:
                 result.append([list2[i2], 1])
                 i2 += 1
             if i2 == n2: break
@@ -166,13 +166,13 @@ def take_second(element):
 
 def main():
     movies = InvertedIndex()
-    movies.read_from_file('movies_reduced.txt')
+    movies.read_from_file('movies.txt')
 
     print("Number of films: ", movies.number_of_films)
     print("Number of words: ", movies.number_of_words)
     #print("Amount of unique words ", len(movies.inverted_lists))
 
-    keywords = ["comedy", "japanese", "and", "the"]
+    keywords = ["romantic", "comedy"]
 
     movies.and_query(keywords)
     movies.or_query(keywords)
