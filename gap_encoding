@@ -1,0 +1,37 @@
+from inverted_list import InvertedIndex
+import sys
+
+def gap_encode(list):
+    print("Size before gap encoding", sys.getsizeof(list))
+    previous = 0
+    gap_list = []
+
+    for entry in list:
+        gap_list.append(entry - previous)
+        previous = entry
+
+    result = "".join([get_length(get_offset(gap)) + get_offset(gap) for gap in gap_list])
+    print("Size after gap encoding", sys.getsizeof(result))
+    return result
+
+
+def get_offset(gap):
+    return bin(gap)[3:]
+
+def get_length(offset):
+    return unary_codification(len(offset)) + "0"
+
+def unary_codification(gap):
+    return "".join(["1" for _ in range(gap)])
+
+def unary_decodification(gap): return reduce(lambda x,y : int(x)+int(y),list(gap))
+
+def main():
+    inverted_list = InvertedIndex()
+    inverted_list.read_from_file("movies.txt")
+    most_frequent_word = inverted_list.word_occurrence()
+    doc_list = inverted_list.inverted_lists[most_frequent_word[0]][0]
+    print(gap_encode(doc_list))
+
+if __name__ == "__main__":
+    main()
