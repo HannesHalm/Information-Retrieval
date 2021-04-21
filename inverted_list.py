@@ -158,8 +158,6 @@ class InvertedIndex:
 
         return result
 
-
-
 def take_second(element):
     return element[1]
 

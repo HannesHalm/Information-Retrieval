@@ -61,5 +61,8 @@ class InvertedIndex:
 ii = InvertedIndex()
 ii.read_tsv_file("wikidata-entities.tsv")
 
-for word, index_list in ii.inverted_lists.items():
-    print(word)
+print(len("Amount of 3-grams", ii.inverted_lists.items()))
+print("Amount of words that start with k", len(ii.inverted_lists["$$k"]))
+print("")
+#for word, index_list in ii.inverted_lists.items():
+ #   print(word, index_list)
