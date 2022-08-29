@@ -1,3 +1,4 @@
+__author__ = "Hannes Halm"
 import random
 import string
 import time

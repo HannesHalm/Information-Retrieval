@@ -1,3 +1,4 @@
+__author__ = "Hannes Halm"
 import random as r
 import time as t
 import matplotlib.pyplot as plt

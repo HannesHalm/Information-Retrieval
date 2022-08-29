@@ -30,9 +30,10 @@ class InvertedIndex:
 
                     self.inverted_lists[word][1] += 1
 
-                    # Automatically sorted since for-loop
+                    # Automatically sorted since for-loop in ascending order
                     self.inverted_lists[word][0].append(record_id)
 
+        # Removes duplicates?
         for word, index_list in self.inverted_lists.items():
             index_list[0] = list(dict.fromkeys(index_list[0]))
 
@@ -137,9 +138,16 @@ class InvertedIndex:
         result = []
         i1 = 0
         i2 = 0
-
+        print("list1", list1)
+        print("2",list2)
+        if len(list1) > len(list2):
+            temp = list1.copy()
+            list1 = list2.copy()
+            list2 = temp.copy()
+        print("list1 after", list1)
         n1 = len(list1)
         n2 = len(list2)
+
         while 1:
             while i1 < n1 and list1[i1][0] < list2[i2]:
                 result.append([list1[i1][0], list1[i1][1]])
@@ -149,8 +157,8 @@ class InvertedIndex:
                 result.append([list2[i2], 1])
                 i2 += 1
             if i2 == n2: break
-
-            if list1[i1][0] == list2[i2]:
+            if list1[i1][0] == binary_search(list2[i2], i2, l2, list1[i1][0]):
+            #if list1[i1][0] == list2[i2]:
                 result.append([list1[i1][0], list1[i1][1] + 1])
                 i1 += 1
                 i2 += 1
@@ -158,13 +166,17 @@ class InvertedIndex:
 
         return result
 
+    def binary_search(self, list, low, high, x):
+        print("yee")
+
+
 def take_second(element):
     return element[1]
 
 
 def main():
     movies = InvertedIndex()
-    movies.read_from_file('movies.txt')
+    movies.read_from_file('movies_reduced.txt')
 
     print("Number of films: ", movies.number_of_films)
     print("Number of words: ", movies.number_of_words)
@@ -172,12 +184,10 @@ def main():
 
     keywords = ["romantic", "comedy"]
 
-    movies.and_query(keywords)
+    #movies.and_query(keywords)
     movies.or_query(keywords)
     #movies.plot_frequency()
     #movies.word_occurrence()
-
-
 
 if __name__ == "__main__":
     main()
